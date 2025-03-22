@@ -1,0 +1,12 @@
+tasks:
+  - name: "Gerar Resumo"
+    description: "Gerar um resumo claro sobre inteligência artificial."
+    expected_output: "Um parágrafo resumido e bem estruturado explicando IA."
+    agent_id: 1
+    dependencies: []
+
+
+
+
+
+

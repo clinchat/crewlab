@@ -1,0 +1,7 @@
+streamlit
+crewai
+python-dotenv
+psycopg2-binary
+SQLAlchemy
+PyYAML
+openai
