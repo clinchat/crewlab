@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, Text, Boolean, JSON
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from pydantic import BaseModel
+from typing import List, Optional, Dict, Any
 
 Base = declarative_base()
 
@@ -41,3 +43,4 @@ class LLMModel(Base):
     provider = Column(String, nullable=False)
     config_json = Column(JSON, nullable=False)
     description = Column(String)
+

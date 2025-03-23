@@ -13,6 +13,8 @@ from playground.benchmark_interface import benchmark_interface
 from playground.log_interface import log_interface
 
 
+
+
 def rerun():
     """Executa um rerun compatível com versões antigas do Streamlit."""
     try:
@@ -21,87 +23,6 @@ def rerun():
         st.experimental_rerun()
 
 
-def agentes_interface():
-    st.header("🤖 Cadastro e Configuração de Agentes")
-
-    tab1, tab2 = st.tabs(["Criar Agente", "Lista de Agentes"])
-
-    with tab1:
-        with st.form("form_agente"):
-            st.subheader("Novo Agente")
-            agent_id = st.text_input("ID do Agente")
-            name = st.text_input("Nome")
-            role = st.text_input("Papel do Agente")
-            goal = st.text_area("Objetivo")
-            backstory = st.text_area("História (backstory)")
-            verbose = st.checkbox("Verbose", True)
-            allow_delegation = st.checkbox("Permitir delegação")
-            memory = st.checkbox("Memória")
-            tools = st.text_area("Ferramentas (JSON)", "[]")
-            llm_config = st.text_area(
-                "Configuração do LLM (JSON) *",
-                value=json.dumps({
-                    "provider": "openai",
-                    "config": {
-                        "model": "gpt-3.5-turbo",
-                        "api_key": "sua-api-key-aqui",
-                        "temperature": 0.5
-                    }
-                }, indent=2),
-                height=200,
-                help="Este campo é obrigatório. Exemplo: {'provider': 'openai', 'config': {'model': 'gpt-3.5-turbo', 'api_key': 'chave', 'temperature': 0.5}}"
-            )
-
-            submitted = st.form_submit_button("Salvar Agente")
-            if submitted:
-                try:
-                    tools_json = json.loads(tools)
-                    llm_json = json.loads(llm_config)
-
-                    if "provider" not in llm_json or "config" not in llm_json:
-                        st.error("⚠️ A configuração do LLM deve conter os campos 'provider' e 'config'.")
-                        return
-
-                    if "model" not in llm_json["config"]:
-                        st.error("⚠️ O campo 'model' dentro de 'config' é obrigatório.")
-                        return
-
-                    data = {
-                        "agent_id": agent_id,
-                        "name": name,
-                        "role": role,
-                        "goal": goal,
-                        "backstory": backstory,
-                        "verbose": verbose,
-                        "allow_delegation": allow_delegation,
-                        "memory": memory,
-                        "tools": tools_json,
-                        "llm_config": llm_json,
-                    }
-                    create_agent(data)
-                    st.success(f"Agente '{name}' criado com sucesso!")
-                    rerun()
-
-                except json.JSONDecodeError:
-                    st.error("Erro no formato JSON das ferramentas ou do LLM.")
-
-    with tab2:
-        st.subheader("Agentes cadastrados")
-        agentes = list_agents()
-        if agentes:
-            for agente in agentes:
-                st.write(f"**{agente.name}** ({agente.agent_id}) - {agente.role}")
-                with st.expander("🔍 Ver detalhes do agente"):
-                    st.code(json.dumps(agente.llm_config, indent=2), language="json")
-                if st.button(f"Excluir {agente.agent_id}", key=f"del_{agente.agent_id}"):
-                    try:
-                        delete_agent(agente.agent_id)
-                        st.success(f"Agente '{agente.agent_id}' excluído!")
-                        rerun()
-                    except Exception as e:
-                        st.error(f"Erro ao excluir agente: {e}")
-        else:
-            st.info("Nenhum agente cadastrado ainda.")
 
 
 def tarefas_interface():
@@ -165,9 +86,9 @@ def main():
 
     menu_options = {
         "🏠 Dashboard": "Dashboard",
-        "🤖 Agentes": "Agentes",
-        "📋 Tarefas": "Tarefas",
-        "🧠 Modelos LLM": "ModelosLLM",
+        "🤖 Agentes (Agents)": "Agentes",
+        "📋 Tarefas (Tasks)": "Tarefas",
+        "🧠 Modelos LLM (Models LLM)": "ModelosLLM",
         "🎮 Playground": "Playground",
         "📁 Importação/Exportação": "ImportExport",
         "📊 Benchmarks": "Benchmarks"
@@ -180,7 +101,7 @@ def main():
             st.header("🏠 Dashboard")
             st.write("Resumo rápido do sistema aqui.")
         case "Agentes":
-            agentes_interface()
+            agent_interface()
         case "Tarefas":
             tarefas_interface()
         case "ModelosLLM":

@@ -1,0 +1,22 @@
+{
+  "agent_id": "1",
+  "name": "recepcionista",
+  "role": "atender",
+  "goal": "atender",
+  "backstory": "atender",
+  "verbose": true,
+  "allow_delegation": false,
+  "memory": true,
+  "tools": [],
+  "llm_config": {
+    "provider": "openai",
+    "config": {
+      "model": "gpt-4o-mini",
+      "temperature": 0.7,
+      "api_key": "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"
+    }
+  },
+  "rag_files": [
+    "data/rag_files/1/Minuta Oficio Solicitacao de Informacoes.docx"
+  ]
+}
